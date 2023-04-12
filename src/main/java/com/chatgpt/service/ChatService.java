@@ -6,7 +6,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -17,8 +16,8 @@ public class ChatService {
 
     @Resource private Chat chat;
 
-    @Resource
-    RestTemplate restTemplate;
+//    @Resource
+//    RestTemplate restTemplate;
 
     @PostMapping
     public List<Message> getChat(@RequestBody String content) {

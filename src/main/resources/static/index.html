@@ -124,7 +124,7 @@
         });
         this.loading = true;
         //发送chat
-        axios.post('http://chat.frp.f139.com/chat',this.messageInput.trim(),{
+        axios.post('/chat',this.messageInput.trim(),{
                  headers: {'Content-Type':'text/plain' }
              })
               .then(response => {
