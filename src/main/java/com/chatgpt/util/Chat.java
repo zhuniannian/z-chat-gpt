@@ -40,7 +40,7 @@ public class Chat {
                 .build();
         //构建客户端
        openAiClient = OpenAiClient.builder()
-                .apiKey(Collections.singletonList("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"))
+                .apiKey(Collections.singletonList("sk-"))
                 .okHttpClient(okHttpClient)
                 //自己做了代理就传代理地址，没有可不不传
 //                .apiHost("https://自己代理的服务器地址/")
