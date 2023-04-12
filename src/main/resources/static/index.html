@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html xmlns:v-bind="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Chat</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.7.14/dist/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <meta name="viewport"
+          content="width=device-width,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <style>
+    .chat-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  border: 1px solid #ccc;
+}
+
+.chat-header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #eee;
+  padding: 10px;
+  border-bottom: 1px solid #ccc;
+}
+
+.chat-messages {
+  flex: 1;
+  padding: 10px;
+  overflow-y: scroll;
+}
+
+.message {
+  display: flex;
+  margin-bottom: 10px;
+}
+
+.received {
+  justify-content: flex-start;
+}
+
+.sent {
+  justify-content: flex-end;
+}
+
+.message p {
+  padding: 10px;
+  background-color: #eee;
+  border-radius: 10px;
+  max-width: 70%;
+  word-wrap: break-word;
+}
+
+.chat-input {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #eee;
+  padding: 10px;
+  border-top: 1px solid #ccc;
+}
+
+.chat-input input[type="text"] {
+  flex: 1;
+  padding: 10px;
+  border: none;
+  border-radius: 10px;
+  margin-right: 10px;
+}
+
+.chat-input button {
+  padding: 10px;
+  background-color: #4CAF50;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+}
+
+
+
+    </style>
+</head>
+<body>
+<div id="app">
+    <div class="chat-container">
+        <div class="chat-header">
+            <h2>Chat</h2>
+        </div>
+        <div class="chat-messages" ref="messages">
+            <div v-for="message in messages" :class="['message', message.type]">
+                <p>{{ message.text }}</p>
+            </div>
+        </div>
+        <div style="text-align:center" v-if="loading">
+            loading....
+        </div>
+        <div class="chat-input">
+            <input type="text" v-model="messageInput" @keyup.enter="sendMessage"
+                   placeholder="Type your message here...">
+            <button @click="sendMessage">Send</button>
+        </div>
+    </div>
+</div>
+<script>
+  new Vue({
+  el: '#app',
+  data: {
+    messages: [
+      { text: '您好, 我是聊天机器人?', type: 'received' },
+      { text: '请问有什么可以帮到您?', type: 'received' }
+    ],
+    messageInput: '',
+    loading: false
+  },
+  methods: {
+    sendMessage() {
+      if (this.messageInput.trim() !== '') {
+        if (this.loading) {
+            return;
+        }
+        this.messages.push({
+          text: this.messageInput.trim(),
+          type: 'sent'
+        });
+        this.loading = true;
+        //发送chat
+        axios.post('http://chat.frp.f139.com/chat',this.messageInput.trim(),{
+                 headers: {'Content-Type':'text/plain' }
+             })
+              .then(response => {
+                console.log(response);
+                var resp = response.data;
+                if (resp) {
+                   for(var i = 0 ; i < resp.length; i++) {
+                       this.messages.push({
+                          text: resp[i].content,
+                          type: 'received'
+                        });
+                   }
+                   this.loading = false;
+                }
+              })
+              .catch(error => {
+                console.log(error);
+              });
+this.messageInput = '';
+        this.$nextTick(() => {
+          const messagesContainer = this.$refs.messages;
+          messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        });
+      }
+    }
+  }
+});
+
+
+
+</script>
+</body>
+</html>
