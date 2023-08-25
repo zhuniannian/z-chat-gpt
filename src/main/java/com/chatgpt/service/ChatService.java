@@ -2,6 +2,8 @@ package com.chatgpt.service;
 
 import com.chatgpt.util.Chat;
 import com.unfbx.chatgpt.entity.chat.Message;
+
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,6 +24,11 @@ public class ChatService {
     @PostMapping
     public List<Message> getChat(@RequestBody String content) {
         return chat.send(content);
+    }
+
+    @GetMapping
+    public List<Message> getChat() {
+        return chat.send("你好");
     }
 
 //    public static ExecutorService executors = Executors.newFixedThreadPool(15);
