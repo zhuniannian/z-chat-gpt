@@ -27,8 +27,8 @@ public class ChatService {
     }
 
     @GetMapping
-    public List<Message> getChat() {
-        return chat.send("你好");
+    public void getChat() {
+        System.out.println("hello  vscode");
     }
 
 //    public static ExecutorService executors = Executors.newFixedThreadPool(15);
